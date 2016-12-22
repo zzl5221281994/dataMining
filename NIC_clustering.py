@@ -1,31 +1,34 @@
 import random
 import math
-K_CLUSTER=10
-DATA_FILE='data.txt'
-RESULT_FILE='result.txt'
-RANDOM_TIMES=10
+K_CLUSTER=3
+DATA_FILE='dataSet5.txt'
+RESULT_FILE='result5.txt'
+RANDOM_TIMES=5
 CONVERGENCE_THRESHOLD=0.05
-DIMENSION=2
+DIMENSION=1
+disDict=dict()
 def loadData(filePath):
 	dataSet=list()
-	fp=open(filepath,'r')
+	fp=open(filePath,'r')
 	line=fp.readline()
 	while line!='':
-		l==line.split(',')
-		l[0]=int(l[0])
-		l[1]=int(l[1])
+		l=line.split(' ')
+		l[0]=float(l[0])
+		l[1]=float(l[1])
 		dataSet.append(l)
 		line=fp.readline()
 	return dataSet
 def distance(x,y):
 	result=0
-	for e1,e2 in zips(x,y):
+	for e1,e2 in zip(x,y):
 		result+=(e1-e2)**2
 	return math.sqrt(result)
 def moveTo(Cluster,dataDict,dataPointNo,src,dest):
-	list1,list2=Cluster[src],Cluster[dest]
-	list1,list2=list(set(list1)-set(dataPointNo)),list(set(list2)+set(dataPointNo))
-	Cluster[src],Cluster[dest]=list1,list2
+	#print('***',dataPointNo)
+	#print('&&&&&&&1',Cluster[src],Cluster[dest])
+	Cluster[src].remove(dataPointNo)
+	Cluster[dest].append(dataPointNo)
+	#print('&&&&&&&2',Cluster[src],Cluster[dest])
 	dataDict[dataPointNo]=dest
 def randomInit(dataSet,K_CLUSTER):#clusterNo:[1,...K_CLUSTER]
 								  #cluster:[dataPointNo1,dataPointNo2....]
@@ -39,38 +42,64 @@ def randomInit(dataSet,K_CLUSTER):#clusterNo:[1,...K_CLUSTER]
 			Cluster[ClusterNo]=[dataPointNo]
 		else:
 			Cluster[ClusterNo].append(dataPointNo)
-		dataPoint+=1
+		dataPointNo+=1
 	return Cluster,dataDict
 	pass#return two dict Cluster,dataDict
-def NIC_Score(Cluster):
+def SumlogDis(dataSet,dataPointList):
+	iter,tempDict=dataPointList.copy(),dict()
+	res=0
+	for e1 in iter:
+		for e2 in dataPointList:
+			if (e1,e2) not in tempDict and e1!=e2:
+				#print(distance(dataSet[e1],dataSet[e2]))
+					res+=math.log(disDict[(e1,e2)])
+					tempDict[(e1,e2)]=1
+	return res
+def NIC_Score(dataSet,Cluster):
 	itemTuple=Cluster.items()
+	#print(itemTuple)
+	dataLen=len(dataSet)
+	res=0
 	for e in itemTuple:
+		dis=SumlogDis(dataSet,e[1])
 		Nj=len(e[1])
-def iterative(Cluster,dataDict):
+		res+=(DIMENSION/(Nj-1))*dis
+	return res
+def iterative(Cluster,dataDict,dataSet):
+	print('!@#$%^&*')
 	key=dataDict.keys()
+	key=list(key)
 	clusterNo=Cluster.keys()
+	clusterNo=list(clusterNo)
 	for e in key:
-		targetCluster=list(set(clusterNo)-set(dataDict[e]))
-		initScore=NIC_Score(Cluster)
+		print(e)
+		#print("##@",list([dataDict[e])))
+		targetCluster=list(set(clusterNo)-set([dataDict[e]]))
+		initScore=NIC_Score(dataSet,Cluster)
 		tempScoreList=list()
 		for clu in targetCluster:
-			moveTo(Cluster,dataDict,e,dataDict[e],clu)
-			tempScore=NIC_Score(Cluster)
-			tempScoreList.append([e,dataDict[e],clu,tempScore)
-			moveTo(Cluster,dataDict,e,clu,dataDict[e])
-		min,info=tempScoreList[0][3],0
+			src=dataDict[e]
+			#print(src,clu,'%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+			moveTo(Cluster,dataDict,e,src,clu)
+			tempScore=NIC_Score(dataSet,Cluster)
+			tempScoreList.append([e,src,clu,tempScore])
+			moveTo(Cluster,dataDict,e,clu,src)
+		#print(tempScoreList)
+		min,info=tempScoreList[0][3],tempScoreList[0]
 		for temp in tempScoreList:
 			if temp[3]<min:
 				min=temp[3]
 				info=temp
+		#print('##########@@#@#@',Cluster)
 		if min<initScore:
 			moveTo(Cluster,dataDict,e,info[1],info[2])
-		targetCluster.clear()
-		tempScoreList.clear()
-	key.clear()
-	clusterNo.clear()
+		#targetCluster.clear()
+		#tempScoreList.clear()
+	#key.clear()
+	#clusterNo.clear()
 	return min
 def outPutResult(dataSet,resultCluster,filePath):
+	print(resultCluster)
 	fp=open(filePath,'w')
 	itemTuple=resultCluster.items()
 	for e in itemTuple:
@@ -78,34 +107,37 @@ def outPutResult(dataSet,resultCluster,filePath):
 		for pointNo in e[1]:
 			s=''
 			for elem in dataSet[pointNo]:
-				s+=str(elem)
-			s+=str(label)
-			fp.wirte(s)
+				s+=str(elem)+' '
+			s+=str(label)+'\n'
+			fp.write(s)
+def getDistance(dataSet):
+	iter,resDict=dataSet.copy(),dict()
+	e1,e2,length=0,0,len(dataSet)
+	while e1<length:
+		e2=e1
+		while e2<length:
+			resDict[(e1,e2)]=distance(dataSet[e1],dataSet[e2])
+			resDict[(e2,e1)]=distance(dataSet[e1],dataSet[e2])
+			e2+=1
+		e1+=1
+	return resDict
 dataSet=loadData(DATA_FILE)
-resultCluster,resultScore=dict(),0
+disDict=getDistance(dataSet)
+resultCluster,resultScore=dict(),-10000
 currentTimes=0
 while currentTimes<RANDOM_TIMES:
 	currentTimes+=1
+	print(currentTimes)
 	Cluster,dataDict=randomInit(dataSet,K_CLUSTER)
-	initScore,tempScore=NIC_Score(Cluster),iterative(Cluster,dataDict)
+	#print(Cluster,'##################################',dataDict)
+	initScore=NIC_Score(dataSet,Cluster)
+	tempScore=iterative(Cluster,dataDict,dataSet)
 	while initScore-tempScore>=CONVERGENCE_THRESHOLD:
+		print(initScore-tempScore,CONVERGENCE_THRESHOLD)
 		initScore=tempScore
-		tempScore=iterative()
+		tempScore=iterative(Cluster,dataDict,dataSet)
+	#print(Cluster)
 	if resultScore<tempScore:
 		resultCluster=Cluster
 		resultScore=tempScore
-	else:
-		Cluster.clear()
-	dataDict.clear()
-outPutResult(resultCluster,RESULT_FILE)
-	
-	'''
-	while initScore-tempScore>CONVERGENCE_THRESHOLD:
-		for e in dataDict:
-			dataPoint,otherClusterNo=e[0],set(clusterNo)-set(e[1])
-			for No in otherClusterNo:
-				moveTo(Cluster,dataPoint,e[1],No)
-				tempScore=NIC_Score(Cluster)
-				if tempScore>initScore:
-					moveTo(Cluster,dataPoint,No,e[1])
-	'''
+outPutResult(dataSet,resultCluster,RESULT_FILE)

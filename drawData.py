@@ -7,21 +7,38 @@ axes = plt.subplot(111)
 # 将三类数据分别取出来
 # x轴代表飞行的里程数
 # y轴代表玩视频游戏的百分比
-type1_x = [1,2,3,4]
-type1_y = [2,3,4,9]
-type2_x = [24,22,11,11,334]
-type2_y = [123,123,554,123,32]
-type3_x = [1,23,54,76,3]
-type3_y = [1,23,43,23,23]
-
-type1 = axes.scatter(type1_x, type1_y, s=20, c='red')
-type2 = axes.scatter(type2_x, type2_y, s=40, c='green')
-type3 = axes.scatter(type3_x, type3_y, s=50, c='blue')
+type1_x = list()
+type1_y = list()
+type2_x = list()
+type2_y = list()
+type3_x = list()
+type3_y = list()
+resList=list()
+count=0
+while count<4:
+	resList.append([[],[]])
+	count+=1
+fp=open('result5.txt','r')
+line=fp.readline()
+while line!='':
+	l=line.split(' ')
+	l[0]=float(l[0])
+	l[1]=float(l[1])
+	l[2]=int(l[2])
+	resList[l[2]-1][0].append(l[0])
+	resList[l[2]-1][1].append(l[1])
+	line=fp.readline()
+color=['red','green','blue','yellow','black']
+count=0
+typeS=[]
+while count<4:
+	typeS.append(axes.scatter(resList[count][0], resList[count][1], s=20, c=color[count]))
+	count+=1
 # plt.scatter(matrix[:, 0], matrix[:, 1], s=20 * numpy.array(labels),
 #             c=50 * numpy.array(labels), marker='o',
 #             label='test')
 plt.xlabel(u'每年获取的飞行里程数')
 plt.ylabel(u'玩视频游戏所消耗的事件百分比')
-axes.legend((type1, type2, type3), (u'不喜欢', u'魅力一般', u'极具魅力'), loc=2)
+axes.legend(tuple(typeS), (u'不喜欢', u'魅力一般', u'极具魅力'), loc=2)
 
 plt.show()
