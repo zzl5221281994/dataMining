@@ -3,7 +3,7 @@ from matplotlib import font_manager
 
 import random
 import math
-MAX_POINT=35
+MAX_POINT=120
 
 """ 比较好看的绘制方法 """
 
@@ -29,11 +29,11 @@ def distance(x,y):
 def isInCircle(center,radius,point):
 	res=math.sqrt((point.x-center.x)**2+(point.y-center.y)**2)
 	return res<=radius
-def generateCircle(center,radius,MAX):
+def generateCircle(center,radius,MAX,rad1,rad2):
 	count,pai=0,math.pi
 	resList=list()
 	while count<MAX:
-		rad=random.uniform(0,2*pai)
+		rad=random.uniform(rad1,rad2)
 		num=random.uniform(0,100)
 		l=0
 		if num<=15:
@@ -46,8 +46,8 @@ def generateCircle(center,radius,MAX):
 		resList.append([x,y])
 		count+=1
 	return resList
-def generateRing(center,OuterRadius,InnerRadius,num):
-	res=generateCircle(center,OuterRadius,100*num)
+def generateRing(center,OuterRadius,InnerRadius,num,rad1,rad2):
+	res=generateCircle(center,OuterRadius,100*num,rad1,rad2)
 	result=res.copy()
 	count,length=0,len(res)
 	while count<length:
@@ -57,21 +57,39 @@ def generateRing(center,OuterRadius,InnerRadius,num):
 			result.remove(res[count])
 		count+=1
 	return result
+def generateSquare(leftTop,height,width,num):
+	count=0
+	resList=list()
+	while count<num:
+		count+=1
+		x=random.uniform(leftTop.x,leftTop.x+width)
+		y=random.uniform(leftTop.y-height,leftTop.y)
+		resList.append([x,y])
+	return resList
 def outPutResult(res,filepath):
 	fp=open(filepath,'a')
 	for e in res:
 		s=str(e[0])+' '+str(e[1])+'\n'
 		fp.write(s)
-res=generateCircle(point(0,0),30,MAX_POINT)
-res1=generateRing(point(0,0),200,150,5)
-res2=generateRing(point(0,0),600,560,35)
-res3=generateCircle(point(40,40),10,MAX_POINT)
+res0=generateCircle(point(0,0),4,MAX_POINT,0,2*math.pi)
+res4=generateCircle(point(10,10),4,MAX_POINT,0,2*math.pi)
+res3=generateCircle(point(10,-10),4,MAX_POINT,0,2*math.pi)
+
+res1=generateRing(point(0,0),50,49,100,0,2*math.pi)
+res2=generateRing(point(0,0),30,29,150,0,2*math.pi)
+#res3=generateSquare(point(0,10),3,10,70)
+#res5=generateSquare(point(4,5),5,2,90)
 #outPutResult(res,'dataSet2.txt')
-outPutResult(res1,'dataSet5.txt')
-outPutResult(res2,'dataSet5.txt')
-outPutResult(res,'dataSet5.txt')
+#outPutResult(res1,'dataSet7.txt')
+outPutResult(res4,'dataSet15.txt')
+outPutResult(res0,'dataSet15.txt')
+outPutResult(res1,'dataSet15.txt')
+outPutResult(res2,'dataSet15.txt')
+outPutResult(res3,'dataSet15.txt')
+#outPutResult(res1,'dataSet10.txt')
+#outPutResult(res5,'dataSet10.txt')
 x,y=list(),list()
-for e in res:
+for e in res0:
 	x.append(e[0])
 	y.append(e[1])
 x1,y1=list(),list()
@@ -82,10 +100,15 @@ x2,y2=list(),list()
 for e in res2:
 	x2.append(e[0])
 	y2.append(e[1])
-x3,y3=list(),list()
+
+x5,y5=list(),list()
 for e in res3:
-	x3.append(e[0])
-	y3.append(e[1])
+	x5.append(e[0])
+	y5.append(e[1])
+x6,y6=list(),list()
+for e in res4:
+	x6.append(e[0])
+	y6.append(e[1])
 type1_x=x
 type1_y=y
 type2_x=x1
@@ -96,14 +119,15 @@ type3_y=y2
 type1 = axes.scatter(type1_x, type1_y, c='red')
 type2 = axes.scatter(type2_x, type2_y, c='green')
 type3 = axes.scatter(type3_x, type3_y, c='blue')
-type4 = axes.scatter(x3, y3, c='black')
+type4 = axes.scatter(x5, y5, c='black')
+type5 = axes.scatter(x6, y6, c='purple')
 # plt.scatter(matrix[:, 0], matrix[:, 1], s=20 * numpy.array(labels),
 #             c=50 * numpy.array(labels), marker='o',
 #             label='test')
-plt.xlim(xmax=500,xmin=-500)
-plt.ylim(ymax=500,ymin=-500)
+plt.xlim(xmax=100,xmin=-100)
+plt.ylim(ymax=100,ymin=-100)
 plt.xlabel(u'每年获取的飞行里程数')
 plt.ylabel(u'玩视频游戏所消耗的事件百分比')
-axes.legend((type1, type2, type3,type4), (u'不喜欢', u'魅力一般', u'极具魅力',u'xxx'), loc=2)
+axes.legend((type1, type2, type3,type4,type5), (u'不喜欢', u'魅力一般', u'极具魅力',u'xx',u'aa'), loc=2)
 
 plt.show()

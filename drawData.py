@@ -18,7 +18,7 @@ count=0
 while count<4:
 	resList.append([[],[]])
 	count+=1
-fp=open('result5.txt','r')
+fp=open('result13.txt','r')
 line=fp.readline()
 while line!='':
 	l=line.split(' ')

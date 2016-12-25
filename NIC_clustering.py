@@ -1,8 +1,8 @@
 import random
 import math
-K_CLUSTER=3
-DATA_FILE='dataSet5.txt'
-RESULT_FILE='result5.txt'
+K_CLUSTER=5
+DATA_FILE='dataSet15.txt'
+RESULT_FILE='result15.txt'
 RANDOM_TIMES=5
 CONVERGENCE_THRESHOLD=0.05
 DIMENSION=1
@@ -50,7 +50,7 @@ def SumlogDis(dataSet,dataPointList):
 	res=0
 	for e1 in iter:
 		for e2 in dataPointList:
-			if (e1,e2) not in tempDict and e1!=e2:
+			if (e1,e2) not in tempDict and (e2,e1) not in tempDict and e1!=e2:
 				#print(distance(dataSet[e1],dataSet[e2]))
 					res+=math.log(disDict[(e1,e2)])
 					tempDict[(e1,e2)]=1
