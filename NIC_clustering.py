@@ -1,10 +1,10 @@
 import random
 import math
-K_CLUSTER=5
-DATA_FILE='dataSet15.txt'
-RESULT_FILE='result15.txt'
+K_CLUSTER=2
+DATA_FILE='dataSet18.txt'
+RESULT_FILE='result18.txt'
 RANDOM_TIMES=5
-CONVERGENCE_THRESHOLD=0.05
+CONVERGENCE_THRESHOLD=0.01
 DIMENSION=1
 disDict=dict()
 def loadData(filePath):
@@ -17,6 +17,9 @@ def loadData(filePath):
 		l[1]=float(l[1])
 		dataSet.append(l)
 		line=fp.readline()
+	return dataSet
+def whiting(dataSet):
+	'''暂时没实现'''
 	return dataSet
 def distance(x,y):
 	result=0
@@ -122,6 +125,7 @@ def getDistance(dataSet):
 		e1+=1
 	return resDict
 dataSet=loadData(DATA_FILE)
+dataSet=whiting(dataSet)
 disDict=getDistance(dataSet)
 resultCluster,resultScore=dict(),-10000
 currentTimes=0
