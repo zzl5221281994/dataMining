@@ -5,7 +5,7 @@ DATA_FILE='dataSet18.txt'
 RESULT_FILE='result18.txt'
 RANDOM_TIMES=5
 CONVERGENCE_THRESHOLD=0.01
-DIMENSION=1
+DIMENSION=2
 disDict=dict()
 def loadData(filePath):
 	dataSet=list()
