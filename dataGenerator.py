@@ -3,7 +3,7 @@ from matplotlib import font_manager
 
 import random
 import math
-MAX_POINT=50
+MAX_POINT=200
 
 """ 比较好看的绘制方法 """
 
@@ -71,42 +71,43 @@ def outPutResult(res,filepath):
 	for e in res:
 		s=str(e[0])+' '+str(e[1])+'\n'
 		fp.write(s)
-res0=generateCircle(point(0,0),4,MAX_POINT,0,2*math.pi)
-res4=generateCircle(point(20,20),15,MAX_POINT,0,2*math.pi)
-res3=generateCircle(point(-10,-10),15,MAX_POINT,0,2*math.pi)
+res0=generateCircle(point(0,0),8,MAX_POINT,0,2*math.pi)
+#res4=generateCircle(point(20,20),15,MAX_POINT,0,2*math.pi)
+#res3=generateCircle(point(-10,-10),15,MAX_POINT,0,2*math.pi)
 
-res1=generateRing(point(0,10),11,10,20,math.pi,2*math.pi)
-res2=generateRing(point(0,0),11,10,20,0,math.pi)
+res1=generateRing(point(0,0),50,48,200,0,2*math.pi)
+res2=generateRing(point(0,0),30,28,200,0,2*math.pi)
 #res3=generateSquare(point(0,10),3,10,70)
 #res5=generateSquare(point(4,5),5,2,90)
 #outPutResult(res,'dataSet2.txt')
 #outPutResult(res1,'dataSet7.txt')
 #outPutResult(res4,'dataSet15.txt')
 #outPutResult(res0,'dataSet15.txt')
-outPutResult(res4,'dataSet18.txt')
-outPutResult(res3,'dataSet18.txt')
+outPutResult(res0,'dataSet21.txt')
+outPutResult(res1,'dataSet21.txt')
+outPutResult(res2,'dataSet21.txt')
 #outPutResult(res3,'dataSet15.txt')
 #outPutResult(res1,'dataSet10.txt')
 #outPutResult(res5,'dataSet10.txt')
 x,y=list(),list()
-for e in res4:
+for e in res0:
 	x.append(e[0])
 	y.append(e[1])
 x1,y1=list(),list()
-for e in res3:
+for e in res1:
 	x1.append(e[0])
 	y1.append(e[1])
 x2,y2=list(),list()
-for e in res3:
+for e in res2:
 	x2.append(e[0])
 	y2.append(e[1])
 
 x5,y5=list(),list()
-for e in res3:
+for e in res2:
 	x5.append(e[0])
 	y5.append(e[1])
 x6,y6=list(),list()
-for e in res3:
+for e in res2:
 	x6.append(e[0])
 	y6.append(e[1])
 type1_x=x

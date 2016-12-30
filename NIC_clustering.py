@@ -1,21 +1,28 @@
 import random
 import math
-K_CLUSTER=2
-DATA_FILE='dataSet18.txt'
-RESULT_FILE='result18.txt'
-RANDOM_TIMES=5
-CONVERGENCE_THRESHOLD=0.01
-DIMENSION=2
+import datetime
+begin=datetime.datetime.now()
+K_CLUSTER=5
+DATA_FILE='dataSet/wine.txt'
+RESULT_FILE='resultWineNIC.txt'
+RANDOM_TIMES=10
+CONVERGENCE_THRESHOLD=0.05
+DIMENSION=13
 disDict=dict()
 def loadData(filePath):
 	dataSet=list()
 	fp=open(filePath,'r')
 	line=fp.readline()
 	while line!='':
-		l=line.split(' ')
-		l[0]=float(l[0])
-		l[1]=float(l[1])
-		dataSet.append(l)
+		count,length=1,13
+		line=line[0:-1]
+		l=line.split(',')
+		while count<=length:
+			if l[count]=='?':
+				l[count]='0'
+			l[count]=float(l[count])
+			count+=1
+		dataSet.append(l[1:])
 		line=fp.readline()
 	return dataSet
 def whiting(dataSet):
@@ -125,6 +132,7 @@ def getDistance(dataSet):
 		e1+=1
 	return resDict
 dataSet=loadData(DATA_FILE)
+print(dataSet,"a")
 dataSet=whiting(dataSet)
 disDict=getDistance(dataSet)
 resultCluster,resultScore=dict(),-10000
@@ -145,3 +153,6 @@ while currentTimes<RANDOM_TIMES:
 		resultCluster=Cluster
 		resultScore=tempScore
 outPutResult(dataSet,resultCluster,RESULT_FILE)
+end=datetime.datetime.now()
+print(begin)
+print(end-begin)
