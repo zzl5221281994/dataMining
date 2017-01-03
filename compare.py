@@ -79,20 +79,6 @@ for e in accuracyNIC:
 finalResult/=len(accuracyNIC)-1
 fp=open('resultScoreKmeans.txt','a')
 fp.write('heart,'+str(finalResult)+'\n')'''
-Insert into Table1() values(1,1,'f',20);
-Insert into Table1() values(2,2,'m',22);
-Insert into Table1() values(3,3,'f',23);
-Insert into Table1() values(4,4,'f',22);
-Insert into Table1() values(5,1,'f',24);
-Insert into Table1() values(6,2,'m',19);
-Insert into Table1() values(7,4,'f',26);
-Insert into Table1() values(8,1,'f',24);
-Insert into Table1() values(9,1,'f',20);
-Insert into Table1() values(10,2,'m',22);
-Insert into Table1() values(11,3,'f',23);
-Insert into Table1() values(12,4,'f',22);
-Insert into Table1() values(13,1,'f',24);
-Insert into Table1() values(14,2,'m',19);
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import mlab
